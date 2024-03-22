@@ -14,8 +14,10 @@ export class TransformResponseInterceptor<T> implements NestInterceptor<T, ApiRe
 
              // Extract error messages from BadRequestException
              if (error instanceof HttpException && error.getResponse())
-                errorMessage = error.getResponse()['message']? error.getResponse()['message']: error.getResponse();
+                errorMessage = error.getResponse()['message'] ? error.getResponse()['message'] : error.getResponse();
+             errorMessage = error.meta ? error.meta?.cause : errorMessage;
 
+             console.log('error-', error);
              return throwError(() => {
                 throw new HttpException(
                     {
@@ -31,7 +33,7 @@ export class TransformResponseInterceptor<T> implements NestInterceptor<T, ApiRe
           map((data) => ({
              success: true,
              errors_message: null,
-             data: data,
+             data: data.id ? data.id : data,
           })),
       );
    }
