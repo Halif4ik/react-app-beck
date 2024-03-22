@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {Injectable, Logger, OnApplicationBootstrap} from '@nestjs/common';
+import {PrismaService} from '../prisma.service';
+import {ConfigService} from "@nestjs/config";
+import {User} from "@prisma/client";
 
 @Injectable()
-export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+export class UserService implements OnApplicationBootstrap {
+   private readonly logger: Logger = new Logger(UserService.name);
 
-  findAll() {
-    return `This action returns all user`;
-  }
+   constructor(private prisma: PrismaService, private readonly configService: ConfigService) {
+   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+   async onApplicationBootstrap(): Promise<void> {
+      await this.createUser();
+   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+   async createUser(): Promise<User> {
+      const newUser: User = await this.prisma.user.upsert({
+         where: {
+            email: this.configService.get<string>('USER_EMAIL'),
+         },
+         create: {
+            email: this.configService.get<string>('USER_EMAIL')!,
+            name: this.configService.get<string>('USER_NAME')!,
+         },
+         update: {},
+      });
+      this.logger.log(`Created or found user- ${newUser.email}`);
+      return newUser;
+   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }

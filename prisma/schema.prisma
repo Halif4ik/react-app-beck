@@ -10,16 +10,27 @@ datasource db {
 /// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
 model Task {
   id        Int      @id @default(autoincrement())
-  name      String
-  image     String?
-  published Boolean? @default(false)
   createdAt DateTime @default(now())
-  face      Int?
+  updateAt  DateTime @updatedAt
+
+  name        String
+  description String
+  dueDate     DateTime?
+  priority    Priority?
+  isComplite  Boolean?  @default(false)
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     Int
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  face  Int?
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+  tasks Task[]
+}
+
+enum Priority {
+  low
+  medium
+  hight
 }

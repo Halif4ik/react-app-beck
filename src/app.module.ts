@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import path from "node:path";
 import {ServeStaticModule} from "@nestjs/serve-static";
-import {ConfigModule} from "@nestjs/config";
+import {ConfigModule, ConfigService} from "@nestjs/config";
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import {TransformResponseInterceptor} from "./interceptor/response.interceptor";
 import { UserModule } from './user/user.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
       rootPath: path.join(__dirname, '../public'),
     }),
     UserModule,
+    TaskModule,
   ],
   providers: [
     {
