@@ -18,3 +18,8 @@ docker compose up
 ```
 But in default application use local DB. If you would like to use Docker DB,
 you need to change the connection to the database in the .env file.
+
+If you would like change schema you need change schema prisma and compile new migration:
+```
+yarn prisma migrate dev --name statusTask
+```

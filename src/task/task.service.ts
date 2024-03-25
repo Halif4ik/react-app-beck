@@ -21,7 +21,8 @@ export class TaskService {
             name: createTaskDto.name,
             description: createTaskDto.description,
             priority: createTaskDto.priority,
-            isComplite: createTaskDto.isComplite,
+            status: createTaskDto.status,
+            order: createTaskDto.order,
             owner: {
                connect: {
                   id: createTaskDto.ownerId

@@ -17,7 +17,8 @@ model Task {
   description String
   dueDate     DateTime?
   priority    Priority?
-  isComplite  Boolean?  @default(false)
+  status      Status    @default(toDo)
+  order       Int
   owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     Int
 }
@@ -33,4 +34,11 @@ enum Priority {
   low
   medium
   hight
+}
+
+enum Status {
+  toDo
+  planned
+  inProgress
+  closed
 }
